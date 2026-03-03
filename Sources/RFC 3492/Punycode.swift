@@ -141,7 +141,7 @@ extension Punycode {
     /// - Parameter input: Punycode-encoded ASCII string
     /// - Returns: Decoded Unicode string
     /// - Throws: `Punycode.Error` if decoding fails
-    public static func decode(_ input: String) throws -> String {
+    public static func decode(_ input: String) throws(Error) -> String {
         // Handle empty input
         if input.isEmpty {
             return input
@@ -253,7 +253,7 @@ extension Punycode {
     }
 
     /// Converts a character to its digit value (0-35)
-    private static func charToDigit(_ char: Character) throws -> UInt32 {
+    private static func charToDigit(_ char: Character) throws(Error) -> UInt32 {
         guard let ascii = char.asciiValue else {
             throw Error.badInput
         }
