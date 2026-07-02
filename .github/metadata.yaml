@@ -1,6 +1,6 @@
 # .github/metadata.yaml
 # Triaged by AI-assisted bulk pass (2026-04-29).
-description: "Swift implementation of RFC 3492: Punycode: A Bootstring encoding of Unicode for Internationalized Domain Names."
+description: "Swift implementation of RFC 3492: Punycode: A Bootstring encoding of Unicode for Internationalized Domain Names in Applications (IDNA)."
 topics:
   - standards
   - rfc
