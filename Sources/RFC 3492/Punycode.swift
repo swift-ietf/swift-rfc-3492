@@ -42,7 +42,9 @@ public enum Punycode {
     private static let initialBias: UInt32 = 72
     private static let initialN: UInt32 = 128  // 0x80
     private static let delimiter: Character = "-"
+}
 
+extension Punycode {
     /// Errors that can occur during Punycode encoding/decoding
     public enum Error: Swift.Error, Equatable {
         case overflow
