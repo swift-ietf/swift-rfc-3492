@@ -33,6 +33,9 @@
 /// // Result: "münchen"
 /// ```
 public enum Punycode {
+}
+
+extension Punycode {
     /// Punycode parameters per RFC 3492 Section 5
     private static let base: UInt32 = 36
     private static let tmin: UInt32 = 1
