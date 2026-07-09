@@ -18,6 +18,9 @@ import Testing
 ///
 /// Test cases are taken from RFC 3492 Section 7.1
 struct PunycodeTests {
+}
+
+extension PunycodeTests {
     // MARK: - RFC 3492 Section 7.1 Test Cases
 
     @Test
