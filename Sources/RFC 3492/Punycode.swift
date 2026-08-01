@@ -48,15 +48,6 @@ extension Punycode {
 }
 
 extension Punycode {
-    /// Errors that can occur during Punycode encoding/decoding
-    public enum Error: Swift.Error, Equatable {
-        case overflow
-        case badInput
-        case invalidEncoding
-    }
-}
-
-extension Punycode {
     /// Encodes a Unicode string to Punycode
     ///
     /// - Parameter input: Unicode string to encode
