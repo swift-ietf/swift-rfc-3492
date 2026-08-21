@@ -1,27 +1,11 @@
-// ===----------------------------------------------------------------------===//
-//
-// Copyright (c) 2025 Coen ten Thije Boonkkamp
-// Licensed under Apache License v2.0
-//
-// See LICENSE.txt for license information
-// See CONTRIBUTORS.txt for the list of project contributors
-//
-// SPDX-License-Identifier: Apache-2.0
-//
-// ===----------------------------------------------------------------------===//
-
 import Testing
 
 @testable import RFC_3492
 
-/// Tests for Punycode encoding/decoding per RFC 3492
-///
-/// Test cases are taken from RFC 3492 Section 7.1
 struct PunycodeTests {
 }
 
 extension PunycodeTests {
-    // MARK: - RFC 3492 Section 7.1 Test Cases
 
     @Test
     func `Arabic (Egyptian)`() throws {
@@ -139,17 +123,15 @@ extension PunycodeTests {
 
     @Test
     func `Spanish`() throws {
-        // NOTE: This test expects NFC normalization
-        // Without NFC normalization, composed vs decomposed characters affect encoding
+
         let input = "Porqu\u{00E9}nopuedenhablarenEspa\u{00F1}ol"
         let expected = "PorqunopuedenhablarenEspaol-fmd56a"
 
         let encoded = Punycode.encode(input)
-        // Test round-trip instead of specific encoding until we implement NFC
+
         let decoded = try Punycode.decode(encoded)
         #expect(decoded == input)
 
-        // Also test that the RFC expected encoding decodes correctly
         _ = try Punycode.decode(expected)
     }
 
@@ -262,19 +244,13 @@ extension PunycodeTests {
         #expect(decoded == input)
     }
 
-    // MARK: - Edge Cases
-
     @Test
     func `ASCII only string`() throws {
-        // NOTE: Punycode is designed for strings with non-ASCII characters
-        // Pure ASCII strings don't need encoding and aren't covered by RFC 3492 test vectors
-        // In IDNA context, this is handled by the "xn--" prefix
+
         let input = "example"
         let encoded = Punycode.encode(input)
         #expect(encoded == "example")
 
-        // Decoding pure ASCII is ambiguous without context (IDNA uses "xn--" prefix)
-        // We don't test decode here as it's not specified by RFC 3492
     }
 
     @Test
@@ -289,11 +265,10 @@ extension PunycodeTests {
 
     @Test
     func `Single non-ASCII character`() throws {
-        // NOTE: Single character encoding depends on NFC normalization
+
         let input = "ü"
         let encoded = Punycode.encode(input)
 
-        // Test round-trip instead of specific encoding
         let decoded = try Punycode.decode(encoded)
         #expect(decoded == input)
     }
