@@ -25,7 +25,7 @@ extension Punycode {
         let basicLength = basicScalars.count
         var handledCount = basicLength
 
-        if handledCount > 0 && handledCount < scalars.count {
+        if handledCount > 0 {
             output.append(delimiter)
         }
 

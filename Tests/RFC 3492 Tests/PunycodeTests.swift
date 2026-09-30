@@ -249,7 +249,8 @@ extension PunycodeTests {
 
         let input = "example"
         let encoded = Punycode.encode(input)
-        #expect(encoded == "example")
+        #expect(encoded == "example-")
+        #expect(try Punycode.decode(encoded) == input)
 
     }
 
