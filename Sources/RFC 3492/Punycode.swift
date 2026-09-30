@@ -124,25 +124,35 @@ extension Punycode {
             let oldi = i
             var w: UInt32 = 1
             var k = base
+            var terminated = false
 
             while pos < nonBasicPart.count {
                 let char = nonBasicPart[nonBasicPart.index(nonBasicPart.startIndex, offsetBy: pos)]
                 pos += 1
 
                 let digit = try charToDigit(char)
-                i += digit * w
+                let product = digit.multipliedReportingOverflow(by: w)
+                let sum = i.addingReportingOverflow(product.partialValue)
+                guard !product.overflow, !sum.overflow else { throw Error.overflow }
+                i = sum.partialValue
 
                 let t = threshold(k: k, bias: bias)
                 if digit < t {
+                    terminated = true
                     break
                 }
 
-                w *= (base - t)
+                let next = w.multipliedReportingOverflow(by: base - t)
+                guard !next.overflow else { throw Error.overflow }
+                w = next.partialValue
                 k += base
             }
+            guard terminated else { throw Error.invalidEncoding }
 
             bias = adapt(delta: i - oldi, numPoints: UInt32(output.count + 1), firstTime: oldi == 0)
-            n += i / UInt32(output.count + 1)
+            let advanced = n.addingReportingOverflow(i / UInt32(output.count + 1))
+            guard !advanced.overflow else { throw Error.overflow }
+            n = advanced.partialValue
             i %= UInt32(output.count + 1)
 
             guard let scalar = Unicode.Scalar(n) else {
