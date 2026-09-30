@@ -32,4 +32,14 @@ struct `Punycode boundaries` {
     func `a non-basic code point before the delimiter is rejected`() {
         #expect(throws: Punycode.Error.self) { try Punycode.decode("ü-a") }
     }
+
+    @Test
+    func `input that ends inside a delta is rejected`() {
+        #expect(throws: Punycode.Error.self) { try Punycode.decode("zzzzzzzzzzzzzzzzz") }
+    }
+
+    @Test
+    func `a delta too large for 32 bits is an overflow, not a crash`() {
+        #expect(throws: Punycode.Error.self) { try Punycode.decode("a-99999999999999999999") }
+    }
 }
