@@ -100,7 +100,7 @@ extension Punycode {
 
             let basicPart = input[..<delimiterIndex]
             for char in basicPart {
-                guard let scalar = Unicode.Scalar(String(char)) else {
+                guard let scalar = Unicode.Scalar(String(char)), scalar.value < 0x80 else {
                     throw Error.badInput
                 }
                 output.append(scalar)
