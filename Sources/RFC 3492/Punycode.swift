@@ -194,11 +194,10 @@ extension Punycode {
 
     private static func digitToChar(_ digit: UInt32) -> Character {
 
-        if digit < 26 {
-            return Character(UnicodeScalar(UInt8(digit) + UInt8(ascii: "a")))
-        } else {
+        guard digit < 26 else {
             return Character(UnicodeScalar(UInt8(digit - 26) + UInt8(ascii: "0")))
         }
+        return Character(UnicodeScalar(UInt8(digit) + UInt8(ascii: "a")))
     }
 
     private static func charToDigit(_ char: Character) throws(Error) -> UInt32 {
