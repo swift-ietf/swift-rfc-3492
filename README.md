@@ -1,35 +1,10 @@
 # swift-rfc-3492
 
-![Development Status](https://img.shields.io/badge/status-active--development-blue.svg)
+Use this package when you need the Punycode algorithm itself, to turn one Unicode string into ASCII and back. Start from `Punycode.encode(_:)` and `Punycode.decode(_:)`. To convert whole domain names label by label, with the xn-- prefix, use swift-rfc-5890.
 
-Punycode encoding and decoding of Unicode labels, as specified in RFC 3492.
+## Laws
 
-## Standard Reference
-
-- **RFC**: 3492
-- **Title**: Punycode: A Bootstring encoding of Unicode for IDNA
-
-## Installation
-
-Add the package to your `Package.swift` dependencies:
-
-```swift
-dependencies: [
-    .package(url: "https://github.com/swift-ietf/swift-rfc-3492.git", from: "0.1.2")
-]
-```
-
-Add the product to a target that needs it:
-
-```swift
-.target(
-    name: "YourTarget",
-    dependencies: [
-        .product(name: "RFC 3492", package: "swift-rfc-3492")
-    ]
-)
-```
-
-## License
-
-Apache 2.0. See [LICENSE.md](LICENSE.md).
+- Encoding and decoding work on Unicode scalars, with no normalization or case folding, and never add or strip the xn-- prefix.
+- Encoding copies the ASCII scalars first, in order and with their case, then writes `-` if there were any, then the rest as lowercase base-36 digits. An ASCII-only string therefore gains a trailing `-`, so `example` becomes `example-`. The empty string encodes to itself.
+- Decoding takes everything before the last `-` as the ASCII part. A non-ASCII character there, a character that is not a letter or digit after it, and input that ends in the middle of a number are refused.
+- A number too large for 32 bits is refused as an overflow rather than crashing.
