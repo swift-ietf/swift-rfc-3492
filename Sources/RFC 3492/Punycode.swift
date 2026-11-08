@@ -169,12 +169,12 @@ extension Punycode {
 extension Punycode {
 
     private static func threshold(k: UInt32, bias: UInt32) -> UInt32 {
-        if k <= bias + tmin {
-            return tmin
+        return if k <= bias + tmin {
+            tmin
         } else if k >= bias + tmax {
-            return tmax
+            tmax
         } else {
-            return k - bias
+            k - bias
         }
     }
 
