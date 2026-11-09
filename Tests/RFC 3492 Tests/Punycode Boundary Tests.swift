@@ -9,7 +9,7 @@ extension `Punycode Boundary Tests` {
     struct `Punycode boundaries` {
         @Test
         func `empty input encodes and decodes to empty`() throws {
-            #expect(Punycode.encode("") == "")
+            #expect(try Punycode.encode("") == "")
             #expect(try Punycode.decode("") == "")
         }
 
@@ -21,8 +21,8 @@ extension `Punycode Boundary Tests` {
 
         @Test
         func `a single non-basic code point matches the reference encoder`() throws {
-            #expect(Punycode.encode("ü") == "tda")
-            #expect(Punycode.encode("aü") == "a-eha")
+            #expect(try Punycode.encode("ü") == "tda")
+            #expect(try Punycode.encode("aü") == "a-eha")
             #expect(try Punycode.decode("a-eha") == "aü")
         }
 
@@ -44,6 +44,12 @@ extension `Punycode Boundary Tests` {
         @Test
         func `a delta too large for 32 bits is an overflow, not a crash`() {
             #expect(throws: Punycode.Error.self) { try Punycode.decode("a-99999999999999999999") }
+        }
+
+        @Test
+        func `an encoding delta too large for 32 bits is an overflow, not a crash`() {
+            let input = String(repeating: "a", count: 4_000) + "\u{10FFFF}"
+            #expect(throws: Punycode.Error.overflow) { try Punycode.encode(input) }
         }
     }
 }

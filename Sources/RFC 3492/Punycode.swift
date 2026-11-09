@@ -15,7 +15,7 @@ extension Punycode {
 
 extension Punycode {
 
-    public static func encode(_ input: String) -> String {
+    public static func encode(_ input: String) throws(Error) -> String {
         var output = ""
         let scalars = Array(input.unicodeScalars)
 
@@ -46,12 +46,17 @@ extension Punycode {
                 }
             }
 
-            delta += (minScalar - n) * UInt32(handledCount + 1)
+            let step = (minScalar - n).multipliedReportingOverflow(by: UInt32(handledCount + 1))
+            let stepped = delta.addingReportingOverflow(step.partialValue)
+            guard !step.overflow, !stepped.overflow else { throw Error.overflow }
+            delta = stepped.partialValue
             n = minScalar
 
             for scalar in scalars {
                 if scalar.value < n {
-                    delta += 1
+                    let incremented = delta.addingReportingOverflow(1)
+                    guard !incremented.overflow else { throw Error.overflow }
+                    delta = incremented.partialValue
                 } else if scalar.value == n {
 
                     var q = delta
@@ -81,7 +86,9 @@ extension Punycode {
                 }
             }
 
-            delta += 1
+            let advanced = delta.addingReportingOverflow(1)
+            guard !advanced.overflow else { throw Error.overflow }
+            delta = advanced.partialValue
             n += 1
         }
 
