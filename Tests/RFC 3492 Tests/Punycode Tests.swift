@@ -124,15 +124,14 @@ extension PunycodeTests {
     @Test
     func `Spanish`() throws {
 
-        let input = "Porqu\u{00E9}nopuedenhablarenEspa\u{00F1}ol"
-        let expected = "PorqunopuedenhablarenEspaol-fmd56a"
+        let input = "Porqu\u{00E9}nopuedensimplementehablarenEspa\u{00F1}ol"
+        let expected = "PorqunopuedensimplementehablarenEspaol-fmd56a"
 
         let encoded = Punycode.encode(input)
+        #expect(encoded == expected)
 
-        let decoded = try Punycode.decode(encoded)
+        let decoded = try Punycode.decode(expected)
         #expect(decoded == input)
-
-        _ = try Punycode.decode(expected)
     }
 
     @Test
